@@ -6,6 +6,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
@@ -58,7 +59,7 @@ public class ModelController {
 
         Model model = repositoryService.newModel();
 
-        String name = "process-name";
+        String name = "process-" + UUID.randomUUID().toString();
         String description = "description";
         int revision = 1;
         String key = "process";
@@ -107,6 +108,9 @@ public class ModelController {
 
         RepositoryService repositoryService = processEngine.getRepositoryService();
         Model modelData = repositoryService.getModel(id);
+        if (modelData == null) {
+            return failed("no model found: " + id);
+        }
         byte[] bytes = repositoryService.getModelEditorSource(modelData.getId());
 
         if (bytes == null) {
